@@ -34,12 +34,6 @@ stages:
           inputs:
             command: 'init'
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
-            backendType: 'azurerm'
-            backendServiceArm: 'terraform-aks-azurerm-svc-con'
-            backendAzureRmResourceGroupName: 'terraform-storage-rg'
-            backendAzureRmStorageAccountName: 'terraformstatexlrw'
-            backendAzureRmContainerName: 'newfile'
-            backendAzureRmKey: 'aks-base.tfstate'
             allowTelemetryCollection: true
 
         - task: TerraformCLI@1
@@ -69,12 +63,6 @@ stages:
                 inputs:
                   command: 'init'
                   workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
-                  backendType: 'azurerm'
-                  backendServiceArm: 'terraform-aks-azurerm-svc-con'
-                  backendAzureRmResourceGroupName: 'terraform-storage-rg'
-                  backendAzureRmStorageAccountName: 'terraformstatexlrw'
-                  backendAzureRmContainerName: 'newfile'
-                  backendAzureRmKey: 'aks-$(DEV_ENVIRONMENT).tfstate'
                   allowTelemetryCollection: true
 
               - task: TerraformCLI@1
@@ -82,7 +70,7 @@ stages:
                   command: 'plan'
                   workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
                   environmentServiceName: 'terraform-aks-azurerm-svc-con'
-                  commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'' allowTelemetryCollection: false'
+                  commandOptions: '$(System.DefaultWorkingDirectory)/terraform-manifests/terraform-manifests/aks-terraform-devops-ssh-key-ububtu .pub'
                   allowTelemetryCollection: true
 
               - task: TerraformCLI@1
