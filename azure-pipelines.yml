@@ -53,7 +53,7 @@ stages:
     jobs: 
      - deployment: DeployDevAKSCluster
        displayName: DeployDevAKSCluster
-       dependsOn: Build
+       #dependsOn: Build
        pool:
          vmImage: 'ubuntu-latest'
        environment: $(DEV_ENVIRONMENT)
