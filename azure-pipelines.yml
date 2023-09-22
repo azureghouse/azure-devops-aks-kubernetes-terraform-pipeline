@@ -61,10 +61,10 @@ stages:
          runOnce:
            deploy:
              steps:
-              - task: DownloadSecureFile@1
-                inputs:
-                  secureFile: 'aks-terraform-devops-ssh-key-ububtu.pub'
-                  retryCount: '20'
+              # - task: DownloadSecureFile@1
+              #   inputs:
+              #     secureFile: 'aks-terraform-devops-ssh-key-ububtu.pub'
+              #     retryCount: '20'
               - task: TerraformCLI@1
                 inputs:
                   command: 'init'
