@@ -1,5 +1,5 @@
 trigger:
-- main
+- master
 
 variables:
 - name: DEV_ENVIRONMENT
@@ -28,15 +28,24 @@ stages:
             artifact: 'terraform-manifests-out'
             publishLocation: 'pipeline'
         - task: TerraformInstaller@1
+          displayName: terraform install 
           inputs:
             terraformVersion: 'latest'
         - task: TerraformCLI@1
+          displayName: terraform init 
           inputs:
             command: 'init'
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
+            backendType: 'azurerm'
+            backendServiceArm: 'terraform-aks-azurerm-svc-con'
+            backendAzureRmResourceGroupName: 'terraform-storage-rg'
+            backendAzureRmStorageAccountName: 'terraformstatexlrw'
+            backendAzureRmContainerName: 'newfile'
+            backendAzureRmKey: 'aks-base.tfstate'
             allowTelemetryCollection: true
 
         - task: TerraformCLI@1
+          displayName: terraform validate 
           inputs:
             command: 'validate'
             workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
@@ -60,20 +69,23 @@ stages:
               #     secureFile: 'aks-terraform-devops-ssh-key-ububtu.pub'
               #     retryCount: '20'
               - task: TerraformCLI@1
+                displayName: terraform init
                 inputs:
                   command: 'init'
                   workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
                   allowTelemetryCollection: true
 
               - task: TerraformCLI@1
+                displayName: terraform plan 
                 inputs:
                   command: 'plan'
                   workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
                   environmentServiceName: 'terraform-aks-azurerm-svc-con'
-                  commandOptions: '$(System.DefaultWorkingDirectory)/terraform-manifests/terraform-manifests/aks-terraform-devops-ssh-key-ububtu .pub'
+                  commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'' allowTelemetryCollection: false'
                   allowTelemetryCollection: true
 
               - task: TerraformCLI@1
+                displayName: terraform apply
                 inputs:
                   command: 'apply'
                   workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
