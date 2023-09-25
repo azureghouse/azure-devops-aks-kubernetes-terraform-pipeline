@@ -74,6 +74,11 @@ stages:
                   provider: 'azurerm'
                   command: 'init'
                   workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
+                  backendServiceArm: 'terraform-aks-azurerm-svc-con'
+                  backendAzureRmResourceGroupName: 'sc'
+                  backendAzureRmStorageAccountName: 'mystoregeiouy'
+                  backendAzureRmContainerName: 'myfile'
+                  backendAzureRmKey: 'firstkey'
               - task: TerraformCLI@1
                 displayName: terraform plan 
                 inputs:
