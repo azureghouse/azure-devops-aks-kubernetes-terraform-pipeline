@@ -73,7 +73,7 @@ stages:
                 inputs:
                   provider: 'azurerm'
                   command: 'init'
-                  workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
+                  workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
               - task: TerraformCLI@1
                 displayName: terraform plan 
                 inputs:
